@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:newsjet/pages/home_page.dart';
+import 'package:newsjet/pages/news_list.dart';
+import 'package:newsjet/pages/saved_news.dart';
 import 'package:newsjet/services/database.dart';
 import 'package:newsjet/widgets/news_drawer.dart';
 
@@ -31,33 +34,45 @@ class AppScaffold extends StatefulWidget {
 }
 
 class _AppScaffoldState extends State<AppScaffold> {
-  int selectedPage = 0;
+  String selectedPage = "home";
   
+  void navigateTo(String pageName) {
+    setState(() {
+      selectedPage = pageName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget currentPage;
+    
+    switch (selectedPage) {
+      case "home":
+        currentPage = HomePage();
+      case "saved":
+        currentPage = SavedNews();
+      default:
+        currentPage = NewsList(newsEndpoint: selectedPage);
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          "NEWSJET",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: TextButton(
+          onPressed: () => navigateTo("home"), 
+          child: Text(
+            "NEWSJET",
+            style: TextStyle(fontWeight: FontWeight.bold),
+        )),
       ),
-      drawer: NewsDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '100',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+      drawer: NewsDrawer(navigateTo: navigateTo),
+      body: Expanded(
+        child: Container(
+          padding: EdgeInsets.all(10.0),
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: currentPage,
+        )
+      )
     );
   }
 }

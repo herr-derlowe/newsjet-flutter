@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:newsjet/services/api2news.dart';
 
 class NewsDrawer extends StatelessWidget {
-  const NewsDrawer({super.key});
+  const NewsDrawer({super.key, required this.navigateTo});
+  final Function(String pageName) navigateTo;
 
   @override
   Widget build(BuildContext context) {
@@ -15,23 +17,31 @@ class NewsDrawer extends StatelessWidget {
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
             child: Center(
-              child: Text("News Sources", style: Theme.of(context).textTheme.headlineLarge,)
-            ),
+                child: Text(
+              "News Sources",
+              style: Theme.of(context).textTheme.headlineLarge,
+            )),
           ),
           ListTile(
-            title: Text('Item 1', style: Theme.of(context).textTheme.headlineSmall),
+            title: Text('Saved news',
+                style: Theme.of(context).textTheme.headlineSmall),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              navigateTo("saved");
             },
           ),
-          ListTile(
-            title: const Text('Item 2'),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
+          Divider(
+            height: 100,
+            thickness: 10,
+            indent: 15,
+            endIndent: 15,
           ),
+          for (MapEntry<String, String> outletName in newsSources.entries)
+            ListTile(
+              title: Text(outletName.key, style: Theme.of(context).textTheme.headlineSmall,),
+              onTap: () => {
+                navigateTo(outletName.value)
+              },
+            )
         ],
       ),
     );
