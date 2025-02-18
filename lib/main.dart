@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:newsjet/pages/home_page.dart';
 import 'package:newsjet/pages/news_list.dart';
 import 'package:newsjet/pages/saved_news.dart';
-import 'package:newsjet/services/database.dart';
 import 'package:newsjet/widgets/news_drawer.dart';
 
 void main() {

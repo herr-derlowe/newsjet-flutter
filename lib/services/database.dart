@@ -44,7 +44,7 @@ class DatabaseService {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<NewsLink>> getNewsLinks() async {
+  Future<List<NewsLink>> getAllNewsLinks() async {
     final db = await database;
 
     final List<Map<String, Object?>> linkMaps = await db.query(tableName);
@@ -58,6 +58,18 @@ class DatabaseService {
           } in linkMaps)
         NewsLink(id: id, title: title, summary: summary, link: link),
     ];
+  }
+
+  Future<NewsLink?> getSingleNewsLink(String link) async {
+    final db = await database;
+    List<Map> maps = await db.query(tableName,
+        columns: [linkColumn],
+        where: '$linkColumn = ?',
+        whereArgs: [link]);
+    if (maps.isNotEmpty) {
+      return NewsLink.fromMap(maps.first as Map<String, Object?>);
+    }
+    return null;
   }
 
   Future<void> deleteNewsLink(int id) async {

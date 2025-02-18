@@ -2,10 +2,12 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:newsjet/models/news_link.dart';
 import 'package:newsjet/services/api2news.dart';
+import 'package:newsjet/widgets/news_select_dialog.dart';
 
 class NewsList extends StatefulWidget {
   const NewsList({super.key, required this.newsEndpoint});
   final String newsEndpoint;
+  
 
   @override
   State<NewsList> createState() => _NewsListState();
@@ -45,7 +47,15 @@ class _NewsListState extends State<NewsList> {
                     displayDirection: UIDirection.uiDirectionHorizontal,
                     showMultimedia: true,
                     errorImage: "https://placehold.co/400x300",
-                    onTap: () => ,
+                    onTap: () {
+                      showDialog<void>(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return NewsSelectDialog(newsLink: newsLink, isSavedNews: false, updateNews: () {  },);
+                        }
+                      );
+                    },
                   );
                 });
               } else if (snapshot.hasError) {
