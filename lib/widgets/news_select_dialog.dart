@@ -20,6 +20,7 @@ class NewsSelectDialog extends StatelessWidget {
     return AlertDialog(
       title: Text("News article selection"),
       content: Text("What do you wish to do?"),
+      insetPadding: EdgeInsets.all(10.0),
       actions: [
         TextButton(onPressed: _launchUrl, child: Text("Visit link")),
         if (isSavedNews)
@@ -35,6 +36,7 @@ class NewsSelectDialog extends StatelessWidget {
                 if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Couldn't remove article link")));
                 print("Error occurred: $e");
               }
+              if (context.mounted) Navigator.of(context).pop();
             },
             child: Text("Remove article"))
         else
@@ -50,6 +52,7 @@ class NewsSelectDialog extends StatelessWidget {
               } else {
                 if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Article already saved")));
               }
+              if (context.mounted) Navigator.of(context).pop();
             },
             child: Text("Save article")),
         TextButton(

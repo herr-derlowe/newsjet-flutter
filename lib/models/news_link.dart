@@ -24,15 +24,15 @@ class NewsLink {
       "id": id,
       "title": title,
       "summary": summary,
-      "link": link
+      "url": link
     };
   }
 
   static NewsLink fromMap(Map<String, Object?> map) {
     return NewsLink(
-      id: map[idColumn] as int,
-      title: map[titleColumn] as String,
-      summary: map[summaryColumn] as String,
+      id: map[idColumn] as int?,
+      title: map[titleColumn] == null ? "" : map[titleColumn] as String,
+      summary: map[summaryColumn] as String?,
       link: map[linkColumn] as String
     );
   }

@@ -27,6 +27,7 @@ class NewsDrawer extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineSmall),
             onTap: () {
               navigateTo("saved");
+              Navigator.of(context).pop();
             },
           ),
           Divider(
