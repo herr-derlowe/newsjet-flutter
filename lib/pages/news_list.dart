@@ -7,7 +7,6 @@ import 'package:newsjet/widgets/news_select_dialog.dart';
 class NewsList extends StatefulWidget {
   const NewsList({super.key, required this.newsEndpoint});
   final String newsEndpoint;
-  
 
   @override
   State<NewsList> createState() => _NewsListState();
@@ -16,61 +15,86 @@ class NewsList extends StatefulWidget {
 class _NewsListState extends State<NewsList> {
   late Future<List<NewsLink>> futureNews;
 
-  @override
-  void initState() {
-    super.initState();
-    futureNews = fetchNews(widget.newsEndpoint);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureNews = fetchNews(widget.newsEndpoint);
+  // }
 
+  // @override
+  // void didUpdateWidget(covariant NewsList oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   futureNews = fetchNews(widget.newsEndpoint);
+  // }
+  
   @override
   Widget build(BuildContext context) {
+    futureNews = fetchNews(widget.newsEndpoint);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Center(
           heightFactor: 3,
           child: Text(
-              newsSources.entries.firstWhere((element) => element.value==widget.newsEndpoint).key,
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
+            newsSources.entries
+                .firstWhere((element) => element.value == widget.newsEndpoint)
+                .key,
+            style: Theme.of(context).textTheme.headlineLarge,
+            textAlign: TextAlign.center,
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 10.0,
-          children: [
-            FutureBuilder<List<NewsLink>>(future: futureNews, builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(itemCount: snapshot.data!.length, itemBuilder: (context, index) {
-                  NewsLink newsLink = snapshot.data![index];
-                  return AnyLinkPreview(
-                    link: newsLink.link,
-                    displayDirection: UIDirection.uiDirectionHorizontal,
-                    showMultimedia: true,
-                    errorImage: "https://placehold.co/400x300",
-                    onTap: () {
-                      showDialog<void>(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext context) {
-                          return NewsSelectDialog(newsLink: newsLink, isSavedNews: false, updateNews: () {  },);
-                        }
+        FutureBuilder<List<NewsLink>>(
+            future: futureNews,
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return CircularProgressIndicator();
+              }
+              if (!snapshot.hasData) {
+                return Text("NO NEWS TO SHOW",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary));
+              }
+              
+              if (snapshot.hasError) {
+                return Text("ERROR: NO NEWS TO SHOW",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.error));
+              }
+
+              return Expanded(
+                  child: ListView.separated(
+                    itemCount: snapshot.data!.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      NewsLink newsLink = snapshot.data![index];
+                      //print(newsLink.title);
+                      return AnyLinkPreview(
+                        link: newsLink.link,
+                        displayDirection: UIDirection.uiDirectionHorizontal,
+                        showMultimedia: true,
+                        errorImage: "https://placehold.co/400x300",
+                        onTap: () {
+                          showDialog<void>(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) {
+                                return NewsSelectDialog(
+                                  newsLink: newsLink,
+                                  isSavedNews: false,
+                                  updateNews: () {},
+                                );
+                              });
+                        },
                       );
                     },
-                  );
-                });
-              } else if (snapshot.hasError) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("ERROR: NO NEWS TO SHOW", style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                  ],
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 10,
+                    ),
+                  ),
                 );
-              }
-        
-              return CircularProgressIndicator();
-            }))
-          ],
-        ),
+            })),
       ],
     );
   }

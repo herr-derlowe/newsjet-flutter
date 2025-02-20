@@ -38,8 +38,9 @@ class NewsDrawer extends StatelessWidget {
           for (MapEntry<String, String> outletName in newsSources.entries)
             ListTile(
               title: Text(outletName.key, style: Theme.of(context).textTheme.headlineSmall,),
-              onTap: () => {
-                navigateTo(outletName.value)
+              onTap: () {
+                navigateTo(outletName.value);
+                Navigator.of(context).pop();
               },
             )
         ],

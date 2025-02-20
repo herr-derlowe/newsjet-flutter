@@ -10,8 +10,8 @@ const Map<String, String> newsSources = {
   "TechCrunch Newsletter": "techcrunch",
   "New York Times News": "nyt",
   "CNN News": "cnn",
-  "Google News": "google-news",
-  "Wall Street Journal News": "wsj",
+  //"Google News": "google-news",
+  //"Wall Street Journal News": "wsj",
   "ABC News": "abcnews",
   "Arstechnica News": "arstechnica",
   "Business Insider News": "businessinsider",
@@ -30,8 +30,8 @@ const Map<String, String> newsSources = {
 };
 
 Future<List<NewsLink>> fetchNews(String endpointName) async {
-  final response = await http.get(Uri.parse(apiUrl + newsSources[endpointName]!));
-
+  final response = await http.get(Uri.parse(apiUrl + endpointName));
+  
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.

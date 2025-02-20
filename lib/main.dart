@@ -65,12 +65,10 @@ class _AppScaffoldState extends State<AppScaffold> {
         )),
       ),
       drawer: NewsDrawer(navigateTo: navigateTo),
-      body: Expanded(
-        child: Container(
-          padding: EdgeInsets.all(10.0),
-          color: Theme.of(context).colorScheme.primaryContainer,
-          child: currentPage,
-        )
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: currentPage,
       )
     );
   }
